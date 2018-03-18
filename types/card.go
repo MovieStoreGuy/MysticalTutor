@@ -13,3 +13,25 @@ type Card struct {
 	Toughness string   `json:"toughness,omitempty"`
 	Loyality  int8     `json:"loyality,omitempty"`
 }
+
+// Collection ...
+type Collection []*Card
+
+// ManaCurve returns the manacost of the collection of cards
+// stored in memory
+func (c *Collection) ManaCurve() map[int8]int8 {
+	curve := map[int8]int8{}
+	for _, card := range *c {
+		curve[card.CMC]++
+	}
+	return curve
+}
+
+// CountType will return the number cards of given type
+func (c *Collection) CountType(name string) int {
+	count := 0
+	for _, card := range *c {
+		_ = card
+	}
+	return count
+}

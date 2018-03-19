@@ -8,6 +8,19 @@ import (
 
 type Level int8
 
+type Entry struct {
+	Level Level
+	Data  string
+}
+
+type instance struct {
+	entries chan Entry
+	done    chan bool
+	output  io.Writer
+	level   Level
+	running bool
+}
+
 var (
 	printer map[Level]string = map[Level]string{
 		Fatal: "Fatal",
@@ -35,19 +48,6 @@ var (
 	isnt *instance
 	once sync.Once
 )
-
-type Entry struct {
-	Level Level
-	Data  string
-}
-
-type instance struct {
-	entries chan Entry
-	done    chan bool
-	output  io.Writer
-	level   Level
-	running bool
-}
 
 func GetInstance() *instance {
 	once.Do(func() {

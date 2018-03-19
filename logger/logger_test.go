@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"fmt"
 	"testing"
-	"time"
 
 	"github.com/RenegadeTech/MysticalTutor/logger"
 )
@@ -32,7 +31,6 @@ func TestLogger(t *testing.T) {
 	})
 	i.Start()
 	i.Start()
-	<-time.Tick(time.Second)
 	i.Stop()
 	expected := fmt.Sprintf("[Trace]%s\n", "What is it good for")
 	if string(b.Bytes()) != expected {

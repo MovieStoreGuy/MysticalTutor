@@ -43,6 +43,7 @@ type Entry struct {
 
 type instance struct {
 	entries chan Entry
+	done    chan bool
 	output  io.Writer
 	level   Level
 	running bool
@@ -53,6 +54,7 @@ func GetInstance() *instance {
 		isnt = &instance{
 			level:   Fatal,
 			entries: make(chan Entry, 100),
+			done:    make(chan bool),
 		}
 	})
 	return isnt
@@ -80,13 +82,16 @@ func (i *instance) Start() {
 			select {
 			case data, open := <-i.entries:
 				if !open {
-					break
+					// Need to jump out the loop
+					goto done
 				}
 				if data.Level <= i.level {
 					fmt.Fprintf(i.output, "[%s]%s\n", i.level, data.Data)
 				}
 			}
 		}
+	done:
+		i.done <- true
 	}()
 }
 
@@ -98,4 +103,5 @@ func (i *instance) Stop() {
 		// Wait for the buffer to empty
 	}
 	close(i.entries)
+	<-i.done
 }

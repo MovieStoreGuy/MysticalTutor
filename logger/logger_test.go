@@ -40,3 +40,10 @@ func TestLogger(t *testing.T) {
 		t.Fatal("Incorrect details logged")
 	}
 }
+
+func TestLogLevel(t *testing.T) {
+	var level logger.Level = -1
+	if level.String() != "Unknown" {
+		t.Fatal("Should report an unknown level")
+	}
+}

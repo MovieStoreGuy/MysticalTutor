@@ -78,19 +78,11 @@ func (i *instance) Start() {
 	}
 	i.running = true
 	go func() {
-		for {
-			select {
-			case data, open := <-i.entries:
-				if !open {
-					// Need to jump out the loop
-					goto done
-				}
-				if data.Level <= i.level {
-					fmt.Fprintf(i.output, "[%s] %s\n", i.level, data.Data)
-				}
+		for data := range i.entries {
+			if data.Level <= i.level {
+				fmt.Fprintf(i.output, "[%s] %s\n", i.level, data.Data)
 			}
 		}
-	done:
 		i.done <- true
 	}()
 }

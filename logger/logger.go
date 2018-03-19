@@ -86,7 +86,7 @@ func (i *instance) Start() {
 					goto done
 				}
 				if data.Level <= i.level {
-					fmt.Fprintf(i.output, "[%s]%s\n", i.level, data.Data)
+					fmt.Fprintf(i.output, "[%s] %s\n", i.level, data.Data)
 				}
 			}
 		}

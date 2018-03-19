@@ -33,7 +33,7 @@ func TestLogger(t *testing.T) {
 	// testing starting the logger twice
 	i.Start()
 	i.Stop()
-	expected := fmt.Sprintf("[Trace]%s\n", "What is it good for")
+	expected := fmt.Sprintf("[Trace] %s\n", "What is it good for")
 	if string(b.Bytes()) != expected {
 		t.Log("Expected:", expected)
 		t.Log("Given:", string(b.Bytes()))

@@ -1,5 +1,7 @@
 package types
 
+import "strings"
+
 // Card is a basic container for a Magic the Gathering Card
 // Struct fields are based off https://mtgjson.com/documentation.html
 type Card struct {
@@ -14,7 +16,7 @@ type Card struct {
 	Loyality  int8     `json:"loyality,omitempty"`
 }
 
-// Collection ...
+// Collection is simply an array of cards
 type Collection []*Card
 
 // ManaCurve returns the manacost of the collection of cards
@@ -31,7 +33,9 @@ func (c *Collection) ManaCurve() map[int8]int8 {
 func (c *Collection) CountType(name string) int {
 	count := 0
 	for _, card := range *c {
-		_ = card
+		if strings.Contains(card.Type, name) {
+			count++
+		}
 	}
 	return count
 }

@@ -30,6 +30,7 @@ func TestLogger(t *testing.T) {
 		Data:  "What is it good for",
 	})
 	i.Start()
+	// testing starting the logger twice
 	i.Start()
 	i.Stop()
 	expected := fmt.Sprintf("[Trace]%s\n", "What is it good for")

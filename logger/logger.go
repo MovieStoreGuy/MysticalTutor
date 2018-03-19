@@ -3,6 +3,8 @@ package logger
 import (
 	"fmt"
 	"io"
+	"path"
+	"runtime"
 	"sync"
 )
 
@@ -61,6 +63,8 @@ func GetInstance() *instance {
 }
 
 func (i *instance) Log(e Entry) {
+	_, fn, line, _ := runtime.Caller(1)
+	e.Data = fmt.Sprintf("[%s:%d] %s", path.Base(fn), line, e.Data)
 	i.entries <- e
 }
 
@@ -80,7 +84,8 @@ func (i *instance) Start() {
 	go func() {
 		for data := range i.entries {
 			if data.Level <= i.level {
-				fmt.Fprintf(i.output, "[%s] %s\n", i.level, data.Data)
+
+				fmt.Fprintf(i.output, "[%s] %s\n", data.Level, data.Data)
 			}
 		}
 		i.done <- true

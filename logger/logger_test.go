@@ -3,6 +3,7 @@ package logger_test
 import (
 	"bytes"
 	"fmt"
+	"regexp"
 	"testing"
 
 	"github.com/RenegadeTech/MysticalTutor/logger"
@@ -33,8 +34,8 @@ func TestLogger(t *testing.T) {
 	// testing starting the logger twice
 	i.Start()
 	i.Stop()
-	expected := fmt.Sprintf("[Trace] %s\n", "What is it good for")
-	if string(b.Bytes()) != expected {
+	expected := fmt.Sprintf("^[Trace] .* %s$", "What is it good for")
+	if regexp.MustCompile(expected).MatchString(string(b.Bytes())) {
 		t.Log("Expected:", expected)
 		t.Log("Given:", string(b.Bytes()))
 		t.Fatal("Incorrect details logged")

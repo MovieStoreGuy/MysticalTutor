@@ -1,3 +1,5 @@
+// MysticalTutor is an application that allows for the user
+// to create the most optimal deck given their needs.
 package main
 
 import (

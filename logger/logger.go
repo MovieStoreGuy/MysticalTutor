@@ -32,7 +32,7 @@ func init() {
 	BufferSize = 100
 }
 
-func GetInstance() *instance {
+func GetInstance() Log {
 	once.Do(func() {
 		isnt = &instance{
 			level:   Fatal,

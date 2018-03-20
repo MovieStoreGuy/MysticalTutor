@@ -22,16 +22,18 @@ type instance struct {
 }
 
 var (
-	isnt       *instance
-	once       sync.Once
+	isnt *instance
+	once sync.Once
+	// BufferSize defines how many log entries can store before locking the application
 	BufferSize int
 )
 
 func init() {
-	// BufferSize defines how many log entries can store before locking the application
 	BufferSize = 100
 }
 
+// GetInstance will returns the logger singleton
+// ready for use.
 func GetInstance() Log {
 	once.Do(func() {
 		isnt = &instance{

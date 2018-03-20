@@ -84,7 +84,6 @@ func (i *instance) Start() {
 	go func() {
 		for data := range i.entries {
 			if data.Level <= i.level {
-
 				fmt.Fprintf(i.output, "[%s] %s\n", data.Level, data.Data)
 			}
 		}
@@ -101,4 +100,5 @@ func (i *instance) Stop() {
 	}
 	close(i.entries)
 	<-i.done
+	close(i.done)
 }

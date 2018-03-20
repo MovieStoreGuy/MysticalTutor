@@ -33,6 +33,10 @@ func TestLogger(t *testing.T) {
 	i.Start()
 	// testing starting the logger twice
 	i.Start()
+	i.Log(logger.Entry{
+		Level: logger.Info,
+		Data:  "What is it good for",
+	})
 	i.Stop()
 	expected := fmt.Sprintf("^[Trace] .* %s$", "What is it good for")
 	if regexp.MustCompile(expected).MatchString(string(b.Bytes())) {

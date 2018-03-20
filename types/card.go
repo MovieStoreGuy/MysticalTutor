@@ -39,3 +39,18 @@ func (c *Collection) CountType(name string) int {
 	}
 	return count
 }
+
+// Colours returns what different colours make up the collection
+func (c *Collection) Colours() []string {
+	colours := map[string]bool{}
+	for _, card := range *c {
+		for _, c := range card.Colors {
+			colours[c] = true
+		}
+	}
+	ret := []string{}
+	for k, _ := range colours {
+		ret = append(ret, k)
+	}
+	return ret
+}

@@ -79,6 +79,10 @@ func (i *instance) Start() {
 }
 
 func (i *instance) Stop() {
+	i.Log(Entry{
+		Level: Info,
+		Data:  "Logger is being stopped",
+	})
 	i.running = false
 	for {
 		if len(i.entries) == 0 {

@@ -88,23 +88,39 @@ func (d *driver) AddProcessor(p prototype.Processor) error {
 }
 
 func (d *driver) RemoveProcessor(p prototype.Processor) error {
+	for i, proc := range d.processors {
+		if proc == p {
+			d.processors = append(d.processors[:i], d.processors[i+1:]...)
+			break
+		}
+	}
 	return nil
 }
 
 func (d *driver) AddCollection(c types.Collection) error {
+	if c == nil {
+		return errors.New("Collection was nil")
+	}
+	d.collections = append(d.collections, c)
 	return nil
 }
 
 func (d *driver) RemoveCollection(c types.Collection) error {
+	for i, collection := range d.collections {
+		if reflect.DeepEqual(c, collection) {
+			d.collections = append(d.collections[:i], d.collections[i+1:]...)
+			break
+		}
+	}
 	return nil
 }
 
 func (d *driver) GetProcessors() []prototype.Processor {
-	return nil
+	return d.processors
 }
 
 func (d *driver) GetCollections() []types.Collection {
-	return nil
+	return d.collections
 }
 
 func (d *driver) GetEntireCollection() types.Collection {

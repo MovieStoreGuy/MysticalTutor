@@ -8,6 +8,7 @@ import (
 	"path"
 	"runtime"
 
+	"github.com/RenegadeTech/MysticalTutor/engine"
 	"github.com/RenegadeTech/MysticalTutor/interfaces"
 	"github.com/RenegadeTech/MysticalTutor/logger"
 )
@@ -31,7 +32,7 @@ func main() {
 		Data: "Golang Version: " + runtime.Version(),
 	})
 	var display prototype.Display
-	var engine prototype.Engine
+	var engine prototype.Engine = engine.New()
 	if err := prototype.Connect(engine, display); err != nil {
 		log.Log(logger.Entry{Level: logger.Fatal,
 			Data: err.Error(),

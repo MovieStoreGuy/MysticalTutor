@@ -151,12 +151,12 @@ func (d *driver) downloadCardCollection() error {
 			return err
 		}
 		dto := map[string]*types.Card{}
-		json.Unmarshal(b, &dto)
+		err = json.Unmarshal(b, &dto)
 		for _, card := range dto {
 			d.store = append(d.store, card)
 		}
 	}
-	return nil
+	return err
 }
 
 func (d *driver) loadCollectionFromDisk() error {

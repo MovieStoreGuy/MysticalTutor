@@ -138,7 +138,7 @@ func (d *driver) downloadCardCollection() error {
 			return err
 		}
 		if _, err = os.Stat(path.Dir(CollectionPath)); os.IsNotExist(err) {
-			os.MkdirAll(path.Dir(CollectionPath), 0644)
+			os.MkdirAll(path.Dir(CollectionPath), 0744)
 		}
 		if err := ioutil.WriteFile(CollectionPath, b, 0644); err != nil {
 			return err

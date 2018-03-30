@@ -37,9 +37,7 @@ func init() {
 func GetInstance() Log {
 	once.Do(func() {
 		isnt = &instance{
-			level:   Fatal,
-			entries: make(chan Entry, BufferSize),
-			done:    make(chan bool),
+			level: Fatal,
 		}
 	})
 	return isnt
@@ -68,6 +66,8 @@ func (i *instance) Start() {
 		return
 	}
 	i.running = true
+	i.entries = make(chan Entry, BufferSize)
+	i.done = make(chan bool)
 	go func() {
 		for data := range i.entries {
 			if data.Level <= i.level {

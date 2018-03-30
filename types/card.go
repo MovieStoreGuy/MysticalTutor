@@ -1,6 +1,10 @@
 package types
 
-import "strings"
+import (
+	"strings"
+
+	validator "gopkg.in/go-playground/validator.v9"
+)
 
 // Card is a basic container for a Magic the Gathering Card
 // Struct fields are based off https://mtgjson.com/documentation.html
@@ -14,6 +18,18 @@ type Card struct {
 	Power     string   `json:"power,omitempty" `
 	Toughness string   `json:"toughness,omitempty"`
 	Loyality  int8     `json:"loyality,omitempty"`
+}
+
+var (
+	validate *validator.Validate
+)
+
+func init() {
+	validate = validator.New()
+}
+
+func (c *Card) validate() error {
+	return validate.Struct(c)
 }
 
 // Collection is simply an array of cards

@@ -1,6 +1,7 @@
 # Mystical Tutor - An App to optimise MTG decks
 [![GoDoc](https://godoc.org/github.com/RenegadeTech/MysticalTutor?status.svg)](https://godoc.org/github.com/RenegadeTech/MysticalTutor)
 [![Maintainability](https://api.codeclimate.com/v1/badges/4581c0b4b4a1ea04a33d/maintainability)](https://codeclimate.com/github/RenegadeTech/MysticalTutor/maintainability)
+[![Go Report Card](https://goreportcard.com/badge/github.com/RenegadeTech/MysticalTutor)](https://goreportcard.com/report/github.com/RenegadeTech/MysticalTutor)
 [![Build Status](https://travis-ci.org/RenegadeTech/MysticalTutor.svg?branch=master)](https://travis-ci.org/RenegadeTech/MysticalTutor)  
 
 Mystical Tutor allows for any potential brewer to gauge how well there deck will

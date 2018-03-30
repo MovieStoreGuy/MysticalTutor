@@ -80,6 +80,10 @@ func (d *driver) Initialise() prototype.Engine {
 }
 
 func (d *driver) AddProcessor(p prototype.Processor) error {
+	if p == nil {
+		return errors.New("Process was nil")
+	}
+	d.processors = append(d.processors, p)
 	return nil
 }
 

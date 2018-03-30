@@ -34,7 +34,9 @@ type driver struct {
 
 func New() prototype.Engine {
 	return &driver{
-		store: types.Collection{},
+		store:       types.Collection{},
+		collections: []types.Collection{},
+		processors:  []prototype.Processor{},
 	}
 }
 
@@ -52,6 +54,10 @@ func (d *driver) Connect(disp prototype.Display) error {
 }
 
 func (d *driver) Initialise() prototype.Engine {
+	logger.GetInstance().Log(logger.Entry{
+		Level: logger.Info,
+		Data:  "Initialising the engine",
+	})
 	d.store = types.Collection{}
 	_, err := os.Stat(CollectionPath)
 	switch {

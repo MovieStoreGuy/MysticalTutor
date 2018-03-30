@@ -1,12 +1,9 @@
 package engine
 
 import (
-	"archive/zip"
-	"bytes"
 	"encoding/json"
 	"errors"
 	"io/ioutil"
-	"net/http"
 	"os"
 	"path"
 	"reflect"
@@ -128,24 +125,11 @@ func (d *driver) GetEntireCollection() types.Collection {
 }
 
 func (d *driver) downloadCardCollection() error {
-	resp, err := http.Get(JsonCollectionURL)
+	files, err := downloadZip(JsonCollectionURL)
 	if err != nil {
 		return err
 	}
-	if resp.StatusCode != 200 {
-		return errors.New("Unable to connect to the website")
-	}
-	defer resp.Body.Close()
-	buff, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return err
-	}
-	r := bytes.NewReader(buff)
-	read, err := zip.NewReader(r, resp.ContentLength)
-	if err != nil {
-		return err
-	}
-	for _, file := range read.File {
+	for _, file := range files {
 		if file.FileInfo().IsDir() {
 			continue
 		}

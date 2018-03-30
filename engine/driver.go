@@ -130,6 +130,10 @@ func (d *driver) GetEntireCollection() types.Collection {
 	return d.store
 }
 
+func (d *driver) ProcessCollectionID(id int) {
+	// TODO(Sean Marciniak): Consider how we are going to process a given collection
+}
+
 func (d *driver) downloadCardCollection() error {
 	files, err := downloadZip(JsonCollectionURL)
 	if err != nil {

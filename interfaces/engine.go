@@ -22,4 +22,6 @@ type Engine interface {
 	GetCollections() []types.Collection
 
 	GetEntireCollection() types.Collection
+
+	ProcessCollectionID(index int)
 }

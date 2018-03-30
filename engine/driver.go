@@ -29,8 +29,10 @@ var (
 )
 
 type driver struct {
-	disp  prototype.Display
-	store types.Collection
+	disp        prototype.Display
+	store       types.Collection
+	collections []types.Collection
+	processors  []prototype.Processor
 }
 
 func New() prototype.Engine {
@@ -53,28 +55,27 @@ func (d *driver) Connect(disp prototype.Display) error {
 }
 
 func (d *driver) Initialise() prototype.Engine {
-	if d.store == nil || len(d.store) == 0 {
-		d.store = types.Collection{}
-		_, err := os.Stat(CollectionPath)
-		switch {
-		case os.IsNotExist(err):
-			if err := d.downloadCardCollection(); err != nil {
-				logger.GetInstance().Log(logger.Entry{
-					Level: logger.Info,
-					Data:  "Recieved error: " + err.Error(),
-				})
-			}
-			fallthrough
-		default:
-			if err := d.loadCollectionFromDisk(); err != nil {
-				// Failed to load what we need
-				logger.GetInstance().Log(logger.Entry{
-					Level: logger.Fatal,
-					Data:  "Recieved error: " + err.Error(),
-				})
-			}
+	d.store = types.Collection{}
+	_, err := os.Stat(CollectionPath)
+	switch {
+	case os.IsNotExist(err):
+		if err := d.downloadCardCollection(); err != nil {
+			logger.GetInstance().Log(logger.Entry{
+				Level: logger.Info,
+				Data:  "Recieved error: " + err.Error(),
+			})
+		}
+		fallthrough
+	default:
+		if err := d.loadCollectionFromDisk(); err != nil {
+			// Failed to load what we need
+			logger.GetInstance().Log(logger.Entry{
+				Level: logger.Fatal,
+				Data:  "Recieved error: " + err.Error(),
+			})
 		}
 	}
+	d.collections, d.processors = []types.Collection{}, []prototype.Processor{}
 	return d
 }
 

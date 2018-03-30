@@ -1,7 +1,15 @@
 package engine
 
 import (
+	"archive/zip"
+	"bytes"
+	"encoding/json"
 	"errors"
+	"fmt"
+	"io/ioutil"
+	"net/http"
+	"os"
+	"path"
 	"reflect"
 
 	"github.com/RenegadeTech/MysticalTutor/interfaces"
@@ -25,6 +33,12 @@ type driver struct {
 	store types.Collection
 }
 
+func New() prototype.Engine {
+	return &driver{
+		store: types.Collection{},
+	}
+}
+
 func (d *driver) Connect(disp prototype.Display) error {
 	if disp == nil {
 		return errors.New("nil was passed in for the display")
@@ -39,6 +53,22 @@ func (d *driver) Connect(disp prototype.Display) error {
 }
 
 func (d *driver) Initialise() prototype.Engine {
+	if d.store == nil || len(d.store) == 0 {
+		d.store = types.Collection{}
+		_, err := os.Stat(CollectionPath)
+		switch {
+		case os.IsNotExist(err):
+			if err := d.downloadCardCollection(); err != nil {
+				fmt.Println("Recieved error:", err)
+			}
+			fallthrough
+		default:
+			if err := d.loadCollectionFromDisk(); err != nil {
+				// Failed to load what we need
+				fmt.Println("Recieved error:", err)
+			}
+		}
+	}
 	return d
 }
 
@@ -63,5 +93,68 @@ func (d *driver) GetProcessors() []prototype.Processor {
 }
 
 func (d *driver) GetCollections() []types.Collection {
+	return nil
+}
+
+func (d *driver) GetEntireCollection() types.Collection {
+	return d.store
+}
+
+func (d *driver) downloadCardCollection() error {
+	resp, err := http.Get(JsonCollectionURL)
+	if err != nil {
+		return err
+	}
+	if resp.StatusCode != 200 {
+		return errors.New("Unable to connect to the website")
+	}
+	defer resp.Body.Close()
+	buff, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return err
+	}
+	r := bytes.NewReader(buff)
+	read, err := zip.NewReader(r, resp.ContentLength)
+	if err != nil {
+		return err
+	}
+	for _, file := range read.File {
+		if file.FileInfo().IsDir() {
+			continue
+		}
+		f, err := file.Open()
+		if err != nil {
+			return err
+		}
+		defer f.Close()
+		b, err := ioutil.ReadAll(f)
+		if err != nil {
+			return err
+		}
+		if _, err = os.Stat(path.Dir(CollectionPath)); os.IsNotExist(err) {
+			os.MkdirAll(path.Dir(CollectionPath), 0600)
+		}
+		if err := ioutil.WriteFile(CollectionPath, b, 0600); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (d *driver) loadCollectionFromDisk() error {
+	if _, err := os.Stat(CollectionPath); os.IsNotExist(err) {
+		return errors.New("File does not exist")
+	}
+	buff, err := ioutil.ReadFile(CollectionPath)
+	if err != nil {
+		return err
+	}
+	dto := map[string]*types.Card{}
+	if err := json.Unmarshal(buff, &dto); err != nil {
+		return err
+	}
+	for _, card := range dto {
+		d.store = append(d.store, card)
+	}
 	return nil
 }

@@ -20,4 +20,6 @@ type Engine interface {
 	GetProcessors() []Processor
 
 	GetCollections() []types.Collection
+
+	GetEntireCollection() types.Collection
 }

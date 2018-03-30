@@ -9,8 +9,8 @@ import (
 // Card is a basic container for a Magic the Gathering Card
 // Struct fields are based off https://mtgjson.com/documentation.html
 type Card struct {
-	Names     []string `json:"name" validate:"required"`
-	CMC       int8     `json:"cmc" validate:"required"`
+	Name      string   `json:"name" validate:"required"`
+	CMC       float32  `json:"cmc" validate:"required"`
 	Colors    []string `json:"colors" validate:"required"`
 	ManaCost  string   `json:"manaCost" validate:"required"`
 	Type      string   `json:"type" validate:"required"`
@@ -37,8 +37,8 @@ type Collection []*Card
 
 // ManaCurve returns the manacost of the collection of cards
 // stored in memory
-func (c *Collection) ManaCurve() map[int8]int8 {
-	curve := map[int8]int8{}
+func (c *Collection) ManaCurve() map[float32]int8 {
+	curve := map[float32]int8{}
 	for _, card := range *c {
 		curve[card.CMC]++
 	}

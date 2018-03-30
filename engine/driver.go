@@ -5,7 +5,6 @@ import (
 	"errors"
 	"io/ioutil"
 	"os"
-	"path"
 	"reflect"
 
 	"github.com/RenegadeTech/MysticalTutor/interfaces"
@@ -68,7 +67,6 @@ func (d *driver) Initialise() prototype.Engine {
 				Data:  "Recieved error: " + err.Error(),
 			})
 		}
-		fallthrough
 	default:
 		if err := d.loadCollectionFromDisk(); err != nil {
 			// Failed to load what we need
@@ -152,11 +150,10 @@ func (d *driver) downloadCardCollection() error {
 		if err != nil {
 			return err
 		}
-		if _, err = os.Stat(path.Dir(CollectionPath)); os.IsNotExist(err) {
-			os.MkdirAll(path.Dir(CollectionPath), 0744)
-		}
-		if err := ioutil.WriteFile(CollectionPath, b, 0644); err != nil {
-			return err
+		dto := map[string]*types.Card{}
+		json.Unmarshal(b, &dto)
+		for _, card := range dto {
+			d.store = append(d.store, card)
 		}
 	}
 	return nil

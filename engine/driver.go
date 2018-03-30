@@ -5,7 +5,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -13,6 +12,7 @@ import (
 	"reflect"
 
 	"github.com/RenegadeTech/MysticalTutor/interfaces"
+	"github.com/RenegadeTech/MysticalTutor/logger"
 	"github.com/RenegadeTech/MysticalTutor/types"
 )
 
@@ -59,13 +59,19 @@ func (d *driver) Initialise() prototype.Engine {
 		switch {
 		case os.IsNotExist(err):
 			if err := d.downloadCardCollection(); err != nil {
-				fmt.Println("Recieved error:", err)
+				logger.GetInstance().Log(logger.Entry{
+					Level: logger.Info,
+					Data:  "Recieved error: " + err.Error(),
+				})
 			}
 			fallthrough
 		default:
 			if err := d.loadCollectionFromDisk(); err != nil {
 				// Failed to load what we need
-				fmt.Println("Recieved error:", err)
+				logger.GetInstance().Log(logger.Entry{
+					Level: logger.Fatal,
+					Data:  "Recieved error: " + err.Error(),
+				})
 			}
 		}
 	}

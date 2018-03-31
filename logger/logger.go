@@ -48,7 +48,7 @@ func (i *instance) Log(e Entry) Log {
 		return i
 	}
 	_, fn, line, _ := runtime.Caller(1)
-	e.Data = fmt.Sprintf("[%s:%d] %s", path.Base(fn), line, e.Data)
+	e.Data = fmt.Sprintf("[%s:%d]\t%s", path.Base(fn), line, e.Data)
 	i.entries <- e
 	return i
 }
@@ -71,7 +71,7 @@ func (i *instance) Start() {
 	go func() {
 		for data := range i.entries {
 			if data.Level <= i.level {
-				fmt.Fprintf(i.output, "[%s] %s\n", data.Level, data.Data)
+				fmt.Fprintf(i.output, "[%s]\t%s\n", data.Level, data.Data)
 			}
 		}
 		i.done <- true
@@ -79,6 +79,9 @@ func (i *instance) Start() {
 }
 
 func (i *instance) Stop() {
+	if !i.running {
+		return
+	}
 	i.Log(Entry{
 		Level: Info,
 		Data:  "Logger is being stopped",

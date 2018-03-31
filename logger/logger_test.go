@@ -44,6 +44,7 @@ func TestLogger(t *testing.T) {
 		t.Log("Given:", string(b.Bytes()))
 		t.Fatal("Incorrect details logged")
 	}
+	i.Stop()
 }
 
 func TestLogLevel(t *testing.T) {

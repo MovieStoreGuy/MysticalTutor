@@ -26,14 +26,14 @@ var (
 
 type driver struct {
 	disp        prototype.Display
-	store       types.Collection
+	store       map[string]*types.Card
 	collections []types.Collection
 	processors  []prototype.Processor
 }
 
 func New() prototype.Engine {
 	return &driver{
-		store:       types.Collection{},
+		store:       map[string]*types.Card{},
 		collections: []types.Collection{},
 		processors:  []prototype.Processor{},
 	}
@@ -57,7 +57,7 @@ func (d *driver) Initialise() prototype.Engine {
 		Level: logger.Info,
 		Data:  "Initialising the engine",
 	})
-	d.store = types.Collection{}
+	d.store = map[string]*types.Card{}
 	_, err := os.Stat(CollectionPath)
 	switch {
 	case os.IsNotExist(err):
@@ -125,7 +125,11 @@ func (d *driver) GetCollections() []types.Collection {
 }
 
 func (d *driver) GetEntireCollection() types.Collection {
-	return d.store
+	collection := types.Collection{}
+	for _, card := range d.store {
+		collection = append(collection, card)
+	}
+	return collection
 }
 
 func (d *driver) ProcessCollectionID(id int) {
@@ -150,11 +154,7 @@ func (d *driver) downloadCardCollection() error {
 		if err != nil {
 			return err
 		}
-		dto := map[string]*types.Card{}
-		err = json.Unmarshal(b, &dto)
-		for _, card := range dto {
-			d.store = append(d.store, card)
-		}
+		err = json.Unmarshal(b, &d.store)
 	}
 	return err
 }
@@ -167,12 +167,8 @@ func (d *driver) loadCollectionFromDisk() error {
 	if err != nil {
 		return err
 	}
-	dto := map[string]*types.Card{}
-	if err := json.Unmarshal(buff, &dto); err != nil {
+	if err := json.Unmarshal(buff, &d.store); err != nil {
 		return err
-	}
-	for _, card := range dto {
-		d.store = append(d.store, card)
 	}
 	return nil
 }

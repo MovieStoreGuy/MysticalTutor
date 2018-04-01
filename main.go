@@ -45,7 +45,8 @@ func main() {
 		})
 		goto cleanup
 	}
-	if err := display.Run(); err != nil {
+	engine.Initialise()
+	if err := display.Initialise().Run(); err != nil {
 		log.Log(logger.Entry{Level: logger.Fatal,
 			Data: "Application stopped due to " + err.Error(),
 		})

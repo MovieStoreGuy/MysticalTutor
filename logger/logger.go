@@ -50,6 +50,17 @@ func (i *instance) Log(e Entry) Log {
 	_, fn, line, _ := runtime.Caller(1)
 	e.Data = fmt.Sprintf("[%s:%d]\t%s", path.Base(fn), line, e.Data)
 	i.entries <- e
+	if i.level == Debug {
+		var m runtime.MemStats
+		convert := func(val uint64) uint64 {
+			return val / 1024 / 1024
+		}
+		runtime.ReadMemStats(&m)
+		i.entries <- Entry{
+			Level: Debug,
+			Data:  fmt.Sprintf("[Current Usage] %v MiB, [GC Count] %v", convert(m.Alloc), m.NumGC),
+		}
+	}
 	return i
 }
 

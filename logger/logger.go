@@ -58,7 +58,7 @@ func (i *instance) Log(e Entry) Log {
 		runtime.ReadMemStats(&m)
 		i.entries <- Entry{
 			Level: Debug,
-			Data:  fmt.Sprintf("[Current Usage] %v MiB, [GC Count] %v", convert(m.Alloc), m.NumGC),
+			Data:  fmt.Sprintf("[Current Usage] %v MiB, [GC Count] %v, [GoRoutines] %v", convert(m.Alloc), m.NumGC, runtime.NumGoroutine()),
 		}
 	}
 	return i
@@ -82,7 +82,7 @@ func (i *instance) Start() {
 	go func() {
 		for data := range i.entries {
 			if data.Level <= i.level {
-				fmt.Fprintf(i.output, "[%s]\t%s\n", data.Level, data.Data)
+				fmt.Fprintf(i.output, "[%s]\t%s\n", data.Level.String(), data.Data)
 			}
 		}
 		i.done <- true

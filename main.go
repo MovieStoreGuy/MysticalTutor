@@ -3,6 +3,7 @@
 package main
 
 import (
+	"flag"
 	"io"
 	"os"
 	"path"
@@ -14,19 +15,24 @@ import (
 )
 
 var (
-	logLevel  logger.Level = logger.Info
+	logLevel  *logger.Flag = &logger.Flag{}
 	logWriter io.Writer    = os.Stderr
 	log                    = logger.GetInstance()
 )
 
 func init() {
-	log.Set(logWriter, logLevel).
-		Start()
+	flag.Var(logLevel, "log-level", "The ability to set the log level to something more invovled")
 }
 
 func main() {
+	flag.Parse()
+	log.Set(logWriter, logLevel.GetLevel()).
+		Start()
 	log.Log(logger.Entry{Level: logger.Info,
 		Data: "Started running application " + path.Base(os.Args[0]),
+	})
+	log.Log(logger.Entry{Level: logger.Info,
+		Data: "Log level is set to " + logLevel.String(),
 	})
 	log.Log(logger.Entry{Level: logger.Info,
 		Data: "Golang Version: " + runtime.Version(),

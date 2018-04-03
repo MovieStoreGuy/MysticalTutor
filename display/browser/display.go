@@ -46,11 +46,10 @@ func (d *display) Update() {
 }
 
 func (d *display) Run() error {
-	logger.GetInstance().Log(logger.Entry{
-		Level: logger.Trace,
-		Data:  "Starting display",
+	logger.GetInstance().Log(logger.Entry{Level: logger.Trace,
+		Data: "Starting display",
 	})
-	if err := open(url); err != nil {
+	if err := open("http://" + url); err != nil {
 		return err
 	}
 	srv := &http.Server{

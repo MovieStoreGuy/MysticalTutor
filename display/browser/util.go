@@ -8,7 +8,6 @@ import (
 )
 
 func open(url string) error {
-	url = "http://" + url
 	// Preference: macOS, Linux, and Windows
 	for _, browser := range []string{"open", "xdg-open", "start"} {
 		logger.GetInstance().Log(logger.Entry{Level: logger.Trace,
@@ -19,7 +18,7 @@ func open(url string) error {
 			return nil
 		}
 		logger.GetInstance().Log(logger.Entry{Level: logger.Trace,
-			Data: "Started running the browser",
+			Data: "Issue trying to start the browser: " + err.Error(),
 		})
 	}
 	return fmt.Errorf("Unable to open default browser")

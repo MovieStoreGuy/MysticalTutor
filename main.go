@@ -9,7 +9,7 @@ import (
 	"path"
 	"runtime"
 
-	"github.com/RenegadeTech/MysticalTutor/display/browser"
+	"github.com/RenegadeTech/MysticalTutor/display"
 	"github.com/RenegadeTech/MysticalTutor/engine"
 	"github.com/RenegadeTech/MysticalTutor/interfaces"
 	"github.com/RenegadeTech/MysticalTutor/logger"
@@ -19,10 +19,13 @@ var (
 	logLevel  *logger.Flag = &logger.Flag{}
 	logWriter io.Writer    = os.Stderr
 	log                    = logger.GetInstance()
+
+	enableBrowser bool
 )
 
 func init() {
 	flag.Var(logLevel, "log-level", "The ability to set the log level to something more invovled")
+	flag.BoolVar(&enableBrowser, "enable-browser", true, "Allows the user to view everything view their browser")
 }
 
 func main() {
@@ -38,7 +41,7 @@ func main() {
 	log.Log(logger.Entry{Level: logger.Info,
 		Data: "Golang Version: " + runtime.Version(),
 	})
-	var display prototype.Display = browser.New()
+	var display prototype.Display = util.GetDisplay(enableBrowser)
 	var engine prototype.Engine = engine.New()
 	if err := prototype.Connect(engine, display); err != nil {
 		log.Log(logger.Entry{Level: logger.Fatal,

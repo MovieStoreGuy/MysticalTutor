@@ -39,10 +39,20 @@ func (d *display) Initialise() prototype.Display {
 		})
 		panic(err)
 	}
+	ui.Handle("/sys/kbd/q", func(ui.Event) {
+		ui.StopLoop()
+	})
+	ui.Handle("/timer/1s", func(e ui.Event) {
+		d.Update()
+	})
 	return d
 }
 
 func (d *display) Update() {
+	logger.GetInstance().Log(logger.Entry{Level: logger.Info,
+		Data: "Updating display",
+	})
+	ui.Body.Align()
 	ui.Render(d.points...)
 }
 
@@ -52,8 +62,6 @@ func (d *display) Run() error {
 	})
 	// Ensure that the console is stopped once the program has stopped
 	defer ui.Close()
-	for {
-		d.Update()
-	}
+	ui.Loop()
 	return nil
 }

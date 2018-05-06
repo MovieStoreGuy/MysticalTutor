@@ -33,6 +33,12 @@ Using varying methods to help choose what would be best, it is every brewers del
 You can use the following command line flags are mainly used to help debug the app
 or change the output.
 
+When running in terminal mode, there are some shortcuts avaliable:
+
+q)
+	Quits the program
+
+
 Flags:
 `
 )

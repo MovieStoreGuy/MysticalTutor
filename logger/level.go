@@ -21,6 +21,6 @@ func (l Level) String() string {
 const (
 	Fatal Level = iota
 	Info
-	Debug
 	Trace
+	Debug
 )

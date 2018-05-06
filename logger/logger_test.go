@@ -25,7 +25,7 @@ func TestLogger(t *testing.T) {
 		t.Fatal("Created a nil object")
 	}
 	b := &bytes.Buffer{}
-	i.Set(b, logger.Trace)
+	i.Set(b, logger.Debug)
 	i.Log(logger.Entry{
 		Level: logger.Info,
 		Data:  "What is it good for",
@@ -44,6 +44,7 @@ func TestLogger(t *testing.T) {
 		t.Log("Given:", string(b.Bytes()))
 		t.Fatal("Incorrect details logged")
 	}
+	i.Stop()
 }
 
 func TestLogLevel(t *testing.T) {

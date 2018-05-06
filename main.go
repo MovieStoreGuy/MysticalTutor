@@ -4,6 +4,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"io"
 	"os"
 	"path"
@@ -23,9 +24,26 @@ var (
 	enableBrowser bool
 )
 
+const (
+	message string = `%s -- A Magic the Gathering™ deck building app
+
+This app will help you gauge and decide what cards should be paired together.
+Using varying methods to help choose what would be best, it is every brewers delight.
+
+You can use the following command line flags are mainly used to help debug the app
+or change the output.
+
+Flags:
+`
+)
+
 func init() {
 	flag.Var(logLevel, "log-level", "The ability to set the log level to something more invovled")
 	flag.BoolVar(&enableBrowser, "enable-browser", true, "Allows the user to view everything view their browser")
+	flag.Usage = func() {
+		fmt.Fprintf(os.Stderr, message, os.Args[0])
+		flag.PrintDefaults()
+	}
 }
 
 func main() {

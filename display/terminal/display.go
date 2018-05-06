@@ -6,7 +6,7 @@ import (
 
 	"github.com/RenegadeTech/MysticalTutor/interfaces"
 	"github.com/RenegadeTech/MysticalTutor/logger"
-	ui "gopkg.in/gizak/termui.v1"
+	ui "github.com/gizak/termui"
 )
 
 func New() prototype.Display {
